@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{padding: 0;
+        margin: 0;}
+        #pic{
+float: left;
+        }
+        #draw{
+            float: left;
+            margin-left: 10px;;
+        }
+    </style>
+</head>
+<body >
+<div>
+<canvas id="pic" height="1000px" width="50px">you can pic there</canvas>
+<canvas id="draw" height="1000px" width="1000px">you can pic there</canvas>
+</div>
+</body>
+<script type="text/javascript">
+    var color=document.getElementById("pic").getContext("2d");
+//        var color=new Array(6);
+    var draw=document.getElementById("draw").getContext("2d");
+
+    for(var i=0;i<6;i++){
+        color.beginPath();
+
+//        color[i]=draw.getContext("2d");
+            switch (i){
+                case 0:  color.fillStyle="red";
+                    break;
+                case 1:  color.fillStyle="rgba(0,245,255,255)";
+                    break;
+                case 2:  color.fillStyle="black";
+                    break;
+                case 3:  color.fillStyle="yellow";
+                    break;
+                case 4:  color.fillStyle="#7FFFD4";
+                    break;
+                case 5:  color.fillStyle="#FFB6C1";
+                    break;
+                case 6:  color.fillStyle="#90EE90";
+                    break;
+
+            }
+
+        color.arc(20,20+i*40,15,0,2*Math.PI,false);
+
+            color.fill();
+        }
+
+    var EventUtil = {
+        addHandler:function(elem,type,handler){
+            if(elem.addEventListener)
+            {
+                elem.addEventListener(type,handler,false);
+            }else if(elem.attachEvent)
+            {
+                elem.attachEvent("on"+type,handler);
+            }else
+            {
+                elem["on"+type]=handler;
+            }
+        },
+        removeHandler:function(elem,type,handler){
+            if(elem.removeEventListener)
+            {
+                elem.removeEventListener(type,handler,false);
+            }else if(elem.detachEvent)
+            {
+                elem.detachEvent("on"+type,handler);
+            }else
+            {
+                elem["on"+type]=null;
+            }
+        },
+        getEvent:function(event){
+            return event?event:window.event;
+        },
+        getTarget:function(event){
+            return event.target||event.srcElement;
+        },
+        preventDefault:function(event){
+            if(event,preventDefault){
+                event.preventDefault();
+            }else{
+                event.returnValue = false;
+            }
+        },
+        stopPropagation:function(event){
+            if(event.stopPropagation){
+                event.stopPropagation();
+            }else{
+                event.cancelBubble=true;
+            }
+        }
+
+    };
+
+    //取得颜色
+    EventUtil.addHandler(document,"click",function(event){
+        event=EventUtil.getEvent(event);
+        var   x=event.clientX;
+       var y=event.clientY;
+        use=color.getImageData(x,y,1,1);
+//        alert(x+" "+y);
+//        console.log(use.data[0],use.data[1],use.data[2],use.data[3]);
+//        alert(use.data[0]+" "+ use.data[1] +" "+use.data[2]+" "+use.data[3]);
+//        color.beginPath();
+        draw.strokeStyle="rgba("+use.data[0]+","+use.data[1]+","+use.data[2]+","+use.data[3]+")";
+//        color.strokeStyle="rgba(0,245,255,255)";
+        draw.strokeRect(10,10,40,40);
+        draw.stroke();
+
+    });
+
+
+
+////
+//    var startX;
+//    var startY;
+//    var endX;
+//    var endY;
+    draw.beginPath();
+
+
+    EventUtil.addHandler(document,"mousedown",function(event){
+         event=EventUtil.getEvent(event);
+        console.log(event.pageX);
+
+//        alert(startX);
+
+        draw.moveTo(event.pageX-60,event.pageY);
+
+
+    });
+    EventUtil.addHandler(document,"mouseup",function(event){
+        event=EventUtil.getEvent(event);
+        console.log(event.pageX);
+        draw.lineTo(event.pageX-60,event.pageY);
+
+        draw.stroke();
+
+    });
+//get();
+//  alert(startX);;
+
+
+</script>
+</html>
