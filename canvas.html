@@ -7,25 +7,48 @@
         *{padding: 0;
         margin: 0;}
         #pic{
-float: left;
+           /*float: left;*/
+            /*display: inline-block;*/
+            background-color: #888888;
+        }
+        #shape{
+            background-color: #a6e1ec;
+            /*float: left;*/
+
         }
         #draw{
             float: left;
             margin-left: 10px;;
         }
+        #left{
+            /*display: block;*/
+            float: left;
+        }
     </style>
 </head>
 <body >
 <div>
-<canvas id="pic" height="1000px" width="50px">you can pic there</canvas>
-<canvas id="draw" height="1000px" width="1000px">you can pic there</canvas>
+    <ul id="left">
+<li><canvas id="pic" height="300px" width="50px">you can pic there</canvas></li>
+ <li><canvas id="triangular" height="40px" width="50px">you can pic there</canvas></li>
+        <li><canvas id="square" height="40px" width="50px">you can pic there</canvas></li>
+        <li><canvas id="round" height="40px" width="50px">you can pic there</canvas></li>
+
+    </ul>
+    <canvas id="draw" height="1000px" width="1000px">you can pic there</canvas>
 </div>
 </body>
 <script type="text/javascript">
     var color=document.getElementById("pic").getContext("2d");
 //        var color=new Array(6);
     var draw=document.getElementById("draw").getContext("2d");
-
+    var triangular=document.getElementById("triangular").getContext("2d");
+    var square=document.getElementById("square").getContext("2d");
+    var round=document.getElementById("round").getContext("2d");
+    var triangularArea=document.getElementById("triangular");
+    var squareArea=document.getElementById("square");
+    var roundArea=document.getElementById("round");
+    var colorArea=document.getElementById("pic");
     for(var i=0;i<6;i++){
         color.beginPath();
 
@@ -49,9 +72,9 @@ float: left;
             }
 
         color.arc(20,20+i*40,15,0,2*Math.PI,false);
-
             color.fill();
         }
+//    color.strokeRect(5,10+i*40,30,20);
 
     var EventUtil = {
         addHandler:function(elem,type,handler){
@@ -101,8 +124,9 @@ float: left;
 
     };
 
-    //取得颜色
-    EventUtil.addHandler(document,"click",function(event){
+   // 取得颜色
+    EventUtil.addHandler(colorArea,"click",function(event){
+//console.log(1);
         event=EventUtil.getEvent(event);
         var   x=event.clientX;
        var y=event.clientY;
@@ -113,11 +137,145 @@ float: left;
 //        color.beginPath();
         draw.strokeStyle="rgba("+use.data[0]+","+use.data[1]+","+use.data[2]+","+use.data[3]+")";
 //        color.strokeStyle="rgba(0,245,255,255)";
-        draw.strokeRect(10,10,40,40);
-        draw.stroke();
+//        color.strokeRect(10,10,40,40);
+////console.log(1);
+//
+//        color.stroke();
 
     });
+//图形工具栏
+    square.strokeRect(12,10,23,23);
+    triangular.strokeRect(10,10,30,20);
 
+        round.beginPath();
+        round.arc(26,15,14,0,2*Math.PI,false);
+        round.stroke();
+    var begin_pathX;
+    var begin_pathY;
+    var type=0;
+    var square_path=[];
+//    var pathX;
+//    var pathY;
+    /**
+     * 0=直线；
+     * 1=长方形；
+     */
+    function squarepaint(){
+        var q=1;
+        for(q in square_path) {
+            console.log(square_path[q][0]-1);
+            var width=(square_path[q][0])-(square_path[0][0]);
+            var height=(square_path[q][1])-(square_path[0][1]);
+            draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+            console.log(width);
+        }
+    }
+function triangularDraw1(){
+        my_down=true;
+        begin_pathX=event.offsetX;
+        begin_pathY=event.offsetY;
+        square_path.push([begin_pathX,begin_pathY]);
+//        console.log(begin_pathX);
+}
+    function triangularDraw3(){
+        if(my_down==true){
+        begin_pathX=event.offsetX;
+        begin_pathY=event.offsetY;
+        square_path.push([begin_pathX,begin_pathY]);
+            squarepaint();
+//console.log()
+   }}
+    function triangularDraw2() {
+        square_path=[];
+        my_down=false;
+    }
+    EventUtil.addHandler(triangularArea,"click",function(event){
+     type=1;
+    });
+
+
+    EventUtil.addHandler(colorArea,"click",function(event){
+        type=0;
+    });
+
+
+
+
+    //划线
+
+    var array_paint=[];
+    //        var array_path=[];
+    var current_x=0;
+    var current_y=0;
+    var my_down=false;
+    function paint(){
+        draw.beginPath();
+//console.log(0);
+        draw.lineTo(array_paint[0][0],array_paint[0][1]);
+        if(array_paint.length==1){
+            draw.moveTo(array_paint[0][0]+1,array_paint[0][1]+1);
+//            console.log(1);
+        }else{
+            var i=1;
+            for(i in array_paint){
+//                draw.strokeStyle="red";
+                draw.lineTo(array_paint[i][0],array_paint[i][1]);
+                draw.moveTo(array_paint[i][0],array_paint[i][1]);
+//                console.log(array_paint[i][0],array_paint[i][1]);
+
+            }
+
+        }
+//        draw.closePath();
+        draw.stroke();
+    }
+
+function drawing1(){
+        my_down=true;
+        current_x=event.offsetX;
+        current_y=event.offsetY;
+        array_paint.push([current_x,current_y]);
+        paint();}
+
+
+    function drawing2(){
+            my_down = false;
+            array_paint = [];
+
+        }
+    function drawing3(){
+        if(my_down==true){
+            current_x=event.offsetX;
+            current_y=event.offsetY;
+            array_paint.push([current_x,current_y]);
+            paint();
+        }
+    }
+    EventUtil.addHandler(document,"mousedown",function(event){
+        switch (type){
+            case 0:drawing1();
+                break;
+            case 1:        triangularDraw1();
+break;
+        }
+
+    });
+    EventUtil.addHandler(document,"mouseup",function(event){
+        switch (type){
+            case 0:drawing2();
+                break;
+            case 1:        triangularDraw2();
+                break;
+        }  });
+    EventUtil.addHandler(document,"mousemove",function(event){
+
+        switch (type){
+            case 0:drawing3();
+                break;
+            case 1:        triangularDraw3();
+                break;
+        }
+    });
 
 
 ////
@@ -125,28 +283,29 @@ float: left;
 //    var startY;
 //    var endX;
 //    var endY;
-    draw.beginPath();
+//    draw.beginPath();
+//
+//
+//    EventUtil.addHandler(document,"mousedown",function(event){
+//         event=EventUtil.getEvent(event);
+//        console.log(event.pageX);
+//
+////        alert(startX);
+//
+//        draw.moveTo(event.pageX-60,event.pageY);
+//
+//
+//    });
+//    EventUtil.addHandler(document,"mouseup",function(event){
+//        event=EventUtil.getEvent(event);
+//        console.log(event.pageX);
+//        draw.lineTo(event.pageX-60,event.pageY);
+//        draw.stroke();
+//
+//
+//    });
 
-
-    EventUtil.addHandler(document,"mousedown",function(event){
-         event=EventUtil.getEvent(event);
-        console.log(event.pageX);
-
-//        alert(startX);
-
-        draw.moveTo(event.pageX-60,event.pageY);
-
-
-    });
-    EventUtil.addHandler(document,"mouseup",function(event){
-        event=EventUtil.getEvent(event);
-        console.log(event.pageX);
-        draw.lineTo(event.pageX-60,event.pageY);
-
-        draw.stroke();
-
-    });
-//get();
+    //get();
 //  alert(startX);;
 
 
