@@ -161,13 +161,63 @@
      * 1=长方形；
      */
     function squarepaint(){
+        var k=0;
         var q=1;
         for(q in square_path) {
-            console.log(square_path[q][0]-1);
+//            console.log(square_path[q][0]-1);
             var width=(square_path[q][0])-(square_path[0][0]);
             var height=(square_path[q][1])-(square_path[0][1]);
-            draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
-            console.log(width);
+//            var m=q+1;
+            var lastwidth=(square_path[k][0])-(square_path[0][0]);
+            var lastheight=(square_path[k][1])-(square_path[0][1]);
+//            console.log(square_path[0][0],square_path[0][1]);
+            if(width>=lastwidth&&height>=lastheight) {
+                      if(width>=0&&height>=0) {
+                          draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+                          draw.clearRect(square_path[0][0], square_path[0][1], lastwidth, lastheight);
+                          console.log("0.0");
+
+                      }else if(width<0&&height<0){
+                          draw.clearRect(square_path[0][0]+2, square_path[0][1]+2, lastwidth-5, lastheight-5);
+                          draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+                          console.log("0.1");
+                      }else if(width>0&&height<0){
+                          draw.clearRect(square_path[0][0]-2, square_path[0][1]+2, lastwidth+5, lastheight-5);
+                          draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+                          console.log("0.2");
+
+                      }else{
+                          draw.clearRect(square_path[0][0]+2, square_path[0][1]-2, lastwidth-5, lastheight+5);
+                          draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+
+                          console.log("0.3");
+
+                      }
+            }else {
+                if(width>=0&&height>=0) {
+                    draw.clearRect(square_path[0][0] - 2, square_path[0][1] - 2, lastwidth + 5, lastheight + 5);
+                    draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+               console.log("1.0")
+                }else if(height<0&&width<0){
+                    draw.clearRect(square_path[0][0], square_path[0][1], lastwidth, lastheight);
+                    draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+                   console.log("1.1");
+                }else if(width>0&&height<0){
+                    draw.clearRect(square_path[0][0]-2, square_path[0][1]+2, lastwidth+5, lastheight-5);
+                    draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+                    console.log("1.2");
+                }else {
+                    draw.clearRect(square_path[0][0]+2, square_path[0][1]-2, lastwidth-5, lastheight+5);
+                    draw.strokeRect(square_path[0][0], square_path[0][1], width, height);
+
+                }
+//                draw.clearRect(square_path[0][0]-5,square_path[0][1]+height, lastwidth+5, chay+5);
+
+//                draw.clearRect(square_path[0][0]+width,square_path[0][1]-5, chax+5, lastheight+5);
+
+            }
+//            console.log(width);
+            k=q;
         }
     }
 function triangularDraw1(){
