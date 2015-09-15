@@ -31,7 +31,6 @@
     <ul id="left">
 <li><canvas id="pic" height="300px" width="50px">you can pic there</canvas></li>
  <li><canvas id="triangular" height="40px" width="50px">you can pic there</canvas></li>
-        <li><canvas id="square" height="40px" width="50px">you can pic there</canvas></li>
         <li><canvas id="round" height="40px" width="50px">you can pic there</canvas></li>
 
     </ul>
@@ -43,10 +42,10 @@
 //        var color=new Array(6);
     var draw=document.getElementById("draw").getContext("2d");
     var triangular=document.getElementById("triangular").getContext("2d");
-    var square=document.getElementById("square").getContext("2d");
+//    var square=document.getElementById("square").getContext("2d");
     var round=document.getElementById("round").getContext("2d");
     var triangularArea=document.getElementById("triangular");
-    var squareArea=document.getElementById("square");
+//    var squareArea=document.getElementById("square");
     var roundArea=document.getElementById("round");
     var colorArea=document.getElementById("pic");
     for(var i=0;i<6;i++){
@@ -144,7 +143,7 @@
 
     });
 //图形工具栏
-    square.strokeRect(12,10,23,23);
+//    square.strokeRect(12,10,23,23);
     triangular.strokeRect(10,10,30,20);
 
         round.beginPath();
@@ -159,6 +158,7 @@
     /**
      * 0=直线；
      * 1=长方形；
+     * 2=圆形；
      */
     function squarepaint(){
         var k=0;
@@ -247,7 +247,9 @@ function triangularDraw1(){
     EventUtil.addHandler(colorArea,"click",function(event){
         type=0;
     });
-
+    EventUtil.addHandler(roundArea,"click",function(event){
+        type=2;
+    });
 
 
 
@@ -301,12 +303,56 @@ function drawing1(){
             paint();
         }
     }
+    var array_round=[];
+    var heart_x;
+    var heart_y;
+    function round_paint(){
+        var o=1;
+        var k;
+        if(array_round.length!=1){
+        for(o in array_round){
+            draw.clearRect(array_round[0][0]-r,array_round[0][1]-r,2*r,2*r);
+            draw.beginPath();
+
+            var p1=Math.pow(array_round[o][0]-array_round[0][0],2);
+            var p2=Math.pow(array_round[o][1]-array_round[0][1],2);
+            var r2=p1+p2;
+            var r=Math.sqrt(r2);
+//            console.log(r);
+
+            draw.arc(array_round[0][0],array_round[0][1],r,0,2*Math.PI,false);
+            draw.stroke();
+            k=o;
+        }
+    }}
+    function roundDraw1(){
+        my_down=true;
+        heart_x=event.offsetX;
+        heart_y=event.offsetY;
+        array_round.push([heart_x,heart_y]);
+        round_paint();
+    }
+    function roundDraw2(){
+        my_down=false;
+        array_round=[];
+    }
+    function roundDraw3(){
+        if(my_down==true){
+            heart_x=event.offsetX;
+            heart_y=event.offsetY;
+            array_round.push([heart_x,heart_y]);
+            round_paint();
+
+        }
+    }
     EventUtil.addHandler(document,"mousedown",function(event){
         switch (type){
             case 0:drawing1();
                 break;
             case 1:        triangularDraw1();
 break;
+            case 2:        roundDraw1();
+                break;
         }
 
     });
@@ -316,6 +362,9 @@ break;
                 break;
             case 1:        triangularDraw2();
                 break;
+            case 2:        roundDraw2();
+                break;
+
         }  });
     EventUtil.addHandler(document,"mousemove",function(event){
 
@@ -323,6 +372,8 @@ break;
             case 0:drawing3();
                 break;
             case 1:        triangularDraw3();
+                break;
+            case 2:        roundDraw3();
                 break;
         }
     });
